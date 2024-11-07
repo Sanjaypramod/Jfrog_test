@@ -1,6 +1,31 @@
-on:                                                                                                                                    push:
-    branches:                                                                                                                              - master                                                                                                                                                                                                                                                            jobs:                                                                                                                                  build-and-push:
-    runs-on: ubuntu-latest                                                                                                                                                                                                                                                    steps:                                                                                                                                 - name: Checkout code
-        uses: actions/checkout@v2                                                                                                                                                                                                                                               - name: Log in to Harbor
-        run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login -u "${{ secrets.HARBOR_USERNAME }}" --password-stdin https://registry.devopspoc.online                                                                                                                                                                                                                                                             - name: Build Docker image                                                                                                             run: docker build -t https://registry.devopspoc.online/jfrog_repo/python-app:v1 .                                                                                                                                                                                       - name: Push Docker image to Harbor
-        run: docker push https://registry.devopspoc.online/jfrog_repo/python-app:v1                                                                                                                                                                                       ~                                                                                                                                    ~                                                                                                                                    ~                                                                                                                                    ~                                                         
+name: Build and Push to Harbor
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Log in to Harbor
+        run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login -u "${{ secrets.HARBOR_USERNAME }}" --password-stdin https://registry.devopspoc.online
+
+      - name: Build Docker image
+        env:
+          JFROG_USERNAME: ${{ secrets.JFROG_USERNAME }}
+          JFROG_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
+          JFROG_URL: ${{ secrets.JFROG_URL }}
+        run: |
+          docker build --build-arg JFROG_USERNAME=${JFROG_USERNAME} \
+                       --build-arg JFROG_PASSWORD=${JFROG_PASSWORD} \
+                       --build-arg JFROG_URL=${JFROG_URL} \
+                       -t registry.devopspoc.online/jfrog_repo/python-app:v1 .
+
+      - name: Push Docker image to Harbor
+        run: docker push registry.devopspoc.online/jfrog_repo/python-app:v1
