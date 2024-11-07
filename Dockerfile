@@ -5,6 +5,7 @@ FROM python:3.9-slim
 # Arguments
 ARG JFROG_USERNAME
 ARG JFROG_PASSWORD
+ARG JFROG_URL
 
 # Set the working directory in the container
 WORKDIR /app
