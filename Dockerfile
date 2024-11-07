@@ -13,15 +13,12 @@ WORKDIR /app
 # Copy requirements file
 COPY setup.py .
 
-# Define build arguments for JFrog credentials
-ARG JFROG_USERNAME
-ARG JFROG_PASSWORD
-ARG JFROG_URL
-
 # # Install dependencies from JFrog
 # RUN pip config set global.index-url https://${JFROG_USERNAME}:${JFROG_PASSWORD}@${JFROG_URL} && \
 #     pip install --extra-index-url https://pypi.org/simple --no-cache-dir .
 
+# pip conf
+RUN mkdir -p /root/.config/pip
 COPY pip.conf ~/.config/pip/pip.conf
 
 # Copy the application code to the container
