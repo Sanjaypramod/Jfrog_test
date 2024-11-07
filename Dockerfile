@@ -18,7 +18,10 @@ RUN pip config set global.index-url https://${JFROG_USERNAME}:${JFROG_PASSWORD}@
     pip install --extra-index-url https://pypi.org/simple --no-cache-dir .
 
 # Copy the application code to the container
-COPY app.py .
+COPY . /app
+
+# Install pip requirements
+RUN python -m pip install -r requirements.txt
 
 # Define the command to run the application
 CMD ["python", "app.py"]
