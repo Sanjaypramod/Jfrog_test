@@ -25,7 +25,7 @@ COPY pip.conf ~/.config/pip/pip.conf
 COPY . /app
 
 # Install pip requirements
-RUN python -m pip install -r requirements.txt
+# RUN python -m pip install -r requirements.txt
 
 # Define the command to run the application
 # CMD ["python", "app.py"]
