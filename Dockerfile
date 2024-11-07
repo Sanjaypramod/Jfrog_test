@@ -13,8 +13,11 @@ COPY . /app
 RUN mkdir -p /root/.config/pip
 COPY pip.conf /root/.config/pip/pip.conf
 
+# Set the working directory in the container
+WORKDIR /app
+
 # Install pip requirements
-# RUN python -m pip install -r requirements.txt
+RUN python -m pip install -r requirements.txt
 
 # Define the command to run the application
 # CMD ["python", "app.py"]
