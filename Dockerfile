@@ -26,7 +26,7 @@ RUN pip config set global.index-url https://${JFROG_USERNAME}:${JFROG_PASSWORD}@
 COPY . /app
 
 # Install pip requirements
-RUN python -m pip install -r requirements.txt
+# RUN python -m pip install -r requirements.txt
 
 # Define the command to run the application
 # CMD ["python", "app.py"]
