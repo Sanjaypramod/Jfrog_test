@@ -22,6 +22,7 @@ jobs:
           JFROG_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
           JFROG_URL: ${{ secrets.JFROG_URL }}
         run: |
+          echo ${JFROG_USERNAME} ${JFROG_URL}
           docker build --build-arg JFROG_USERNAME=${JFROG_USERNAME} \
                        --build-arg JFROG_PASSWORD=${JFROG_PASSWORD} \
                        --build-arg JFROG_URL=${JFROG_URL} \
