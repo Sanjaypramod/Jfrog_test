@@ -2,6 +2,10 @@
 # Use an official Python image as the base image
 FROM python:3.9-slim
 
+# Arguments
+ARG JFROG_USERNAME
+ARG JFROG_PASSWORD
+
 # Set the working directory in the container
 WORKDIR /app
 
