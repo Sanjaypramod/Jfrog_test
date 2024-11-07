@@ -29,7 +29,9 @@ COPY . /app
 RUN python -m pip install -r requirements.txt
 
 # Define the command to run the application
-CMD ["python", "app.py"]
+# CMD ["python", "app.py"]
+
+CMD ["sleep", "300"]
 
 
 
