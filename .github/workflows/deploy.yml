@@ -20,12 +20,12 @@ jobs:
         env:
           JFROG_USERNAME: ${{ secrets.JFROG_USERNAME }}
           JFROG_PASSWORD: ${{ secrets.JFROG_PASSWORD }}
-          JFROG_URL: ${{ secrets.JFROG_URL }}
+          JFROG_REPO_URL: ${{ secrets.JFROG_REPO_URL }}
         run: |
           echo ${JFROG_USERNAME} ${JFROG_URL}
           docker build --build-arg JFROG_USERNAME=${JFROG_USERNAME} \
                        --build-arg JFROG_PASSWORD=${JFROG_PASSWORD} \
-                       --build-arg JFROG_URL=${JFROG_URL} \
+                       --build-arg JFROG_REPO_URL=${JFROG_REPO_URL} \
                        -t registry.devopspoc.online/jfrog_repo/python-app:v1 .
 
       - name: Push Docker image to Harbor
