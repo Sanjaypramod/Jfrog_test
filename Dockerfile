@@ -1,60 +1,47 @@
+# Stage 1: Install dependencies
+FROM python:3.10-slim AS builder
 
-# Use an official Python image as the base image
-FROM python:3.9-slim
+# Set environment variables for JFrog credentials
+ARG JFROG_REPO_URL
+ARG JFROG_USERNAME
+ARG JFROG_PASSWORD
 
-# # Install dependencies from JFrog
-# RUN pip config set global.index-url https://${JFROG_USERNAME}:${JFROG_PASSWORD}@${JFROG_URL} && \
-#     pip install --extra-index-url https://pypi.org/simple --no-cache-dir .
+# Install tools required to add JFrog credentials and package requirements
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copy the application code to the container
+# Create a pip.conf file with JFrog credentials
+RUN mkdir -p /root/.pip && \
+    echo "[global]" > /root/.pip/pip.conf && \
+    echo "index-url = https://${JFROG_USERNAME}:${JFROG_PASSWORD}@${JFROG_REPO_URL}/simple" >> /root/.pip/pip.conf
+
+# Copy requirements file
+COPY requirements.txt .
+
+# Install dependencies from JFrog repository
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Stage 2: Build the final image
+FROM python:3.10-slim
+
+# Copy installed packages from the builder stage to keep the final image minimal
+COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Install Apache2 for demo
+RUN apt update -y && \
+    apt install -y apache2 apache2-utils 
+
+# Custom Index file
+COPY index.html /var/www/html
+
+# Copy application code
 COPY . /app
-
-# pip conf
-RUN mkdir -p /root/.config/pip
-COPY pip.conf /root/.config/pip/pip.conf
-
-# Set the working directory in the container
 WORKDIR /app
 
-# Install pip requirements
-RUN python -m pip install -r requirements.txt
+# Expose Port
+EXPOSE 80
 
-# Define the command to run the application
-# CMD ["python", "app.py"]
-
-CMD ["sleep", "300"]
-
-
-
-# # Use an official Python image as the base image
-# FROM python:3.9-slim
-
-# # Set the working directory in the container
-# WORKDIR /app
-
-# # Copy requirements.txt to the container
-# COPY setup.py .
-
-# # Copy .env file to the container
-# COPY .env .
-
-# # Install python-dotenv to load environment variables from .env
-# RUN apt-get update && apt-get install -y python3-dotenv
-
-# # Set JFrog as the package index and install dependencies
-# RUN export $(cat .env | xargs) && \
-#     pip config set global.index-url https://${JFROG_USERNAME}:${JFROG_PASSWORD}@${JFROG_URL} && \
-#     pip install --extra-index-url https://pypi.org/simple --no-cache-dir .
-
-    
-
-# # Copy the application code to the container
-# COPY app.py .
-
-# # Define the command to run the application
-# CMD ["python", "app.py"]
-
-
-
-
-
+# Start the apache process
+CMD ["apache2ctl", "-D", "FOREGROUND"]
