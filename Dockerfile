@@ -31,7 +31,7 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Install Apache2 for demo
 RUN apt update -y && \
-    apt install -y apache2 apache2-utils 
+    apt install -y apache2
 
 # Custom Index file
 COPY index.html /var/www/html
