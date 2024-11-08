@@ -30,7 +30,7 @@ jobs:
           docker build --build-arg JFROG_USERNAME=${JFROG_USERNAME} \
                        --build-arg JFROG_PASSWORD=${JFROG_PASSWORD} \
                        --build-arg JFROG_REPO_URL=${JFROG_REPO_URL} \
-                       -t sanjaypramod/python-app:${{ env.revision }} .
+                       -t sanjaypramod/python-app:v${{ env.revision }} .
 
       - name: Push Docker image to dockerhub
-        run: docker push sanjaypramod/python-app:${{ env.revision }}
+        run: docker push sanjaypramod/python-app:v${{ env.revision }}
