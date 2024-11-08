@@ -20,13 +20,13 @@ RUN mkdir -p /root/.pip && \
 COPY requirements.txt .
 
 # Install dependencies from JFrog repository
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt --target /install
 
 # Stage 2: Build the final image
 FROM python:3.10-slim
 
 # Copy installed packages from the builder stage to keep the final image minimal
-COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+COPY --from=builder  /install /usr/local/lib/python3.10/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Install Apache2 for demo
